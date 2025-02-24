@@ -1,27 +1,23 @@
-"use client"
-import { useSession } from "next-auth/react";
+import { auth } from "@clerk/nextjs/server"
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  const router = useRouter()
-  const { data: session } = useSession();
-  const user = session?.user
-  if (!user) {
-    router.push('/login');
+
+export default async function Home() {
+  const { userId } = await auth();
+
+  if(!userId){
+    return redirect("/sign-in");
   }
-
-
-
-  console.log(user);
+ 
   return  (
     <div className="flex min-h-screen flex-col items-center justify-center">
-     {!user && (
+     {!userId && (
                     <div className="border border-solid border-black rounded">
-                        <Link href="/login">Log In</Link>
+                        <Link href="/sign-in">sign in</Link>
                     </div>
                 )}
-                { user && (
+                { userId && (
                     <div className="border border-solid border-black rounded">
                         <Link href="/dashboard">home</Link>
                     </div>

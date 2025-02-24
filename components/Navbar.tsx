@@ -1,48 +1,14 @@
 "use client"
 import Link from "next/link";
 import { Menu, ShoppingCart } from 'lucide-react';
-import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import useCart from "@/lib/hooks/useCart";
+import { UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
-  const { data: session } = useSession();
-  const user = session?.user
-  const [dropDpwnMenu, setDropDownMenu] = useState(false);
-  const router = useRouter();
-  const cart = useCart();
 
-  const showSession = () => {
-    if (user) {
-      return (
-        <button
-          className=" cursor-pointer"
-          onClick={() => {
-            signOut({ redirect: false }).then(() => {
-              router.push("/login");
-              window.location.href = "/login" 
-            });
-          }}
-        >
-          Sign Out
-        </button>
-      );
-    } else if (status === "loading") {
-      return (
-        <div className="animate-spin rounded-full border-t-4 border-blue-500 border-solid h-12 w-12"></div>
-      );
-    } else {
-      return (
-        <Link
-          href="/login"
-          className=""
-        >
-          Sign In
-        </Link>
-      );
-    }
-  };
+  const [dropDpwnMenu, setDropDownMenu] = useState(false);
+  const cart = useCart();
 
   return (
     <div className="sticky top-0 z-10 py-2 px-10 flex justify-between items-center bg-white">
@@ -65,11 +31,9 @@ const Navbar = () => {
             <div className="absolute top-12 right-5 flex flex-col gap-4 p-3 rounded-lg border text-black">
               <Link href="/dashboard/wishlist">Wishlist</Link>
               <Link href="/dashboard/orders">Orders</Link>
-              <p className="">{showSession()}</p>
+              <UserButton/>
             </div>
           )}
-       
-
       </div>
     </div>
   );
