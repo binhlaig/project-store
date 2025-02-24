@@ -25,9 +25,6 @@ const ProductList = () => {
   useEffect(() => {
     getproducts();
   }, []);
-
-  console.log(products);
-
   return loading ? (
     <Loader />
   ) : (
@@ -45,10 +42,10 @@ const ProductList = () => {
           {products.map((product: ProductsType) => (
             <ProductsCard key={product._id} product={product} />
           ))}
-          
+
         </div>
       )}
-      
+
     </div>
   );
 };

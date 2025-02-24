@@ -23,8 +23,6 @@ const Collections = () => {
     getcollections();
   }, []);
 
-  console.log(collection);
-
   return loading ? (
     <Loader />
   ) : (
