@@ -1,18 +1,18 @@
-import { authoptions } from "@/lib/auth";
+
 import Order from "@/lib/models/order";
 import { connectToDB } from "@/lib/mongoDB";
-import { getServerSession } from "next-auth";
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
 
     const { cartItems, customer } = await req.json();
-    const session = await getServerSession(authoptions);
+    const session = auth();
 
     const customerInfo = {
-      clerkId: session?.user._id,
-      name: session?.user.username,
+      clerkId: customer?.clerkId,
+      name: customer?.name,
     };
 
     await connectToDB();

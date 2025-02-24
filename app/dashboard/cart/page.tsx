@@ -8,7 +8,7 @@ const catrpage = () => {
   const cart = useCart();
 
   const total = cart.cartItems.reduce(
-    (acc, cartItem) => acc + cartItem.item.price * cartItem.quantity,
+    (acc, cartItem) => acc + Number(cartItem.item.price) * cartItem.quantity,
     0
   );
 
@@ -73,7 +73,7 @@ const catrpage = () => {
                   />
                 </div>
                 <p className="font-bold">
-                  {cartItem.item.price * cartItem.quantity} ¥{" "}
+                  {Number(cartItem.item.price) * cartItem.quantity} ¥{" "}
                 </p>
                 <Trash
                   className="hover:text-red-600 cursor-pointer"

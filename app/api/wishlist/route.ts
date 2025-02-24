@@ -1,19 +1,19 @@
-import { authoptions } from "@/lib/auth";
+
 import Wishlist from "@/lib/models/wishlist";
 import { connectToDB } from "@/lib/mongoDB";
-import { UserRoundIcon } from "lucide-react";
-import { getServerSession } from "next-auth";
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+
 
 export const GET = async (req: NextRequest) => {
   try {
-    const userId = await getServerSession(authoptions);
+    const { userId } = await auth();
    
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
     await connectToDB();
-    let wishlist = await Wishlist.findOne({ userId: userId.user?._id });
+    let wishlist = await Wishlist.findOne({ userId: userId });
 
     if (!wishlist) {
       wishlist = await Wishlist.create({ userId: userId });
@@ -30,7 +30,7 @@ export const GET = async (req: NextRequest) => {
 };
 export const POST = async (req: NextRequest) => {
   try {
-    const userId = await getServerSession(authoptions);
+    const userId = auth()
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
