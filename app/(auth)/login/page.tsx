@@ -20,6 +20,8 @@ import toast from "react-hot-toast";
 
 import { useState } from "react";
 import Loader from "@/components/Loader";
+import { LoaderCircle } from "lucide-react";
+
 
 
 const formSchema = z.object({
@@ -29,7 +31,7 @@ const formSchema = z.object({
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false);
-  
+
   const router = useRouter();
   const { data: session } = useSession();
   const user = session?.user
@@ -49,28 +51,36 @@ const LoginPage = () => {
 
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const res = await signIn("credentials",{
-      username: values.username,
-      password : values.password,
-      redirect: false,
-    });
-    if(res?.ok){
-      setLoading(false); 
-      router.push("/dashboard");
-      window.location.href = "/dashboard" 
+
+    try {
+      setLoading(true);
+      const res = await signIn("credentials", {
+        username: values.username,
+        password: values.password,
+        redirect: false,
+      });
+      if (res?.ok) {
+        setLoading(false);
+        router.push("/dashboard");
+        // window.location.href = "/dashboard"
+      }
+
+    } catch (error) {
+      console.log(error);
     }
+
   };
 
   console.log(user);
-  
-  return loading ? <Loader/> :  (
+
+  return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h1 className="text-bold  text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Welcome to Bin Hlaig Group
         </h1>
         <h2 className="text-bold  text-blue-700 mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
-        Login
+          Login
         </h2>
       </div>
 
@@ -108,13 +118,23 @@ const LoginPage = () => {
             />
 
             <div className="flex gap-10 ">
-              <Button type="submit" 
-               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                Login
+              <Button type="submit"
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                disabled={loading}>
+                {loading ? (
+                  <>
+                    <LoaderCircle size={20} className="animate-spin" /> &nbsp;
+                    Loading...
+                    <p>error</p>
+                  </>
+                ) : (
+                  "Login"
+                )}
               </Button>
+             
             </div>
           </form>
-         
+
         </Form>
       </div>
     </div>
